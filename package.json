@@ -1,0 +1,26 @@
+{
+  "name": "analyzer-utilities",
+  "version": "1.0.18",
+  "description": "Utilities for the repo-analyzer project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:feedzai/repo-analyzer-utilities.git"
+  },
+  "keywords": [
+    "utilities",
+    "repo-analyzer"
+  ],
+  "author": "Henrique Dias",
+  "license": "MIT",
+  "dependencies": {
+    "glob": "^7.1.4",
+    "lodash": "^4.17.15",
+    "pino": "^5.13.2",
+    "strip-json-comments": "^3.0.1",
+    "yargs": "^14.0.0"
+  }
+}
