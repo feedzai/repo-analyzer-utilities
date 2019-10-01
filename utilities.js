@@ -5,7 +5,6 @@ const fs = require("fs");
 const crypto = require("crypto");
 const util = require("util");
 const _ = require("lodash");
-const fileExists = require("@feedzai/fdz-js-utils/src/fileSystem/fileExists");
 const he = require("he");
 const stripJsonComments = require("strip-json-comments");
 const readFile = util.promisify(fs.readFile);
