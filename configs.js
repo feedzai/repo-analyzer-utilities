@@ -49,7 +49,7 @@ function loadPipelineKeys() {
     };
 }
 /**
- * Returns the rate limit configurations 
+ * Returns the rate limit configurations
  * @returns {object}
  */
 function getElasticRateLimit() {
@@ -217,7 +217,7 @@ function loadStandaloneConfig() {
 
         const conf = require(configs.extends);
 
-        metrics = conf.metrics.map(require);
+        metrics = conf.metrics;
 
         //loads the metrics into the tool
         loadMetrics(metrics);
@@ -227,7 +227,7 @@ function loadStandaloneConfig() {
         config.elastic = conf.reporters.elastic;
 
         loadPipelineKeys();
-        
+
     } catch (err) {
         console.log(err);
         logger.error(`Error trying to load config `);
