@@ -217,7 +217,7 @@ function loadStandaloneConfig() {
 
         const conf = require(configs.extends);
 
-        metrics = conf.metrics.map(require);
+        metrics = conf.metrics;
 
         //loads the metrics into the tool
         loadMetrics(metrics);
