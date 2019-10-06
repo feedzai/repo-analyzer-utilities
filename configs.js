@@ -207,7 +207,7 @@ function loadStandaloneConfig() {
 
     if (!fs.existsSync(configPath)) {
         const fdzConfig = {
-            extends: "feedzai-config"
+            extends: "@feedzai/feedzai-config"
         }
         fs.writeFileSync(configPath, JSON.stringify(fdzConfig))
     }

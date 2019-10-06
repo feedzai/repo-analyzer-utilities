@@ -8,6 +8,7 @@ const _ = require("lodash");
 const he = require("he");
 const stripJsonComments = require("strip-json-comments");
 const readFile = util.promisify(fs.readFile);
+const {fileExists} = require("./utilities");
 const logger = require("pino")({
 
     prettyPrint: { colorize: true },
@@ -36,22 +37,6 @@ const METRIC_GROUPS = {
 };
 
 module.exports.TMP_DIR = TMP_DIR;
-
-async function fileExists() {
-    try {
-        const args = Array.prototype.slice.call(arguments);
-
-        const pathToCheck = args.reduce((memo, segment) => {
-            return path.join(memo, segment);
-        }, "");
-
-        await stat(pathToCheck);
-
-        return true;
-    } catch (e) {
-        return false;
-    }
-}
 
 /**
  * Loads jest config file for a given `repoFolder`
