@@ -7,7 +7,7 @@ const logger = require("pino")({
 });
 const _ = require("lodash");
 const readFile = util.promisify(fs.readFile);
-const {getLastCommitHash } = require("./utilities");
+const {executeCommandSync } = require("./utilities");
 
 
 /**
@@ -106,6 +106,17 @@ function lastReportMetric(repo, metricName) {
 }
 
 /**
+ * Gets last commit hash for a given repo
+ * @param  {string} repoFolder
+ * @returns {string}
+ */
+function getLastCommit(repoFolder) {
+    let result = executeCommandSync(repoFolder, "git rev-parse HEAD").toString();
+    result.replace("\n", "");
+    return result;
+}
+
+/**
  * Runs all `metrics` (previously loaded) on a given `repo`
  * `repoFolder` and `packageJson` are used to pass information to the metric being evaluated.
  * @param  {Object} repo
@@ -120,7 +131,7 @@ async function runMetrics(repo, repoFolder, packageJson) {
             metricNames.push(current.info().name);
             metricGroups.push(current.info());
         }
-        let hash = getLastCommitHash(repoFolder);
+        let hash = getLastCommit(repoFolder);
 
         const lastResult = lastReportMetric(repo, current.info().name);
 
