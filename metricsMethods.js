@@ -7,7 +7,8 @@ const logger = require("pino")({
 });
 const _ = require("lodash");
 const readFile = util.promisify(fs.readFile);
-const {executeCommandSync } = require("./utilities");
+const execSync = require("child_process").execSync;
+
 
 
 /**
@@ -103,6 +104,21 @@ function lastReportMetric(repo, metricName) {
     }
 
     return result;
+}
+
+/**
+ * Executes a `command` in a `folder`
+ * @param  {string} folder
+ * @param  {string} command
+ * @returns {string}
+ */
+function executeCommandSync(folder, command) {
+    try {
+        return execSync(`cd ${folder} && ${command}`);
+    } catch (err) {
+        console.log(err);
+        logger.error(`Error executing ${command} on ${folder}`);
+    }
 }
 
 /**
