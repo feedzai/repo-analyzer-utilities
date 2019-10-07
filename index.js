@@ -257,9 +257,7 @@ function getRepoFolder(repo) {
         return process.cwd();
     }
 
-    let folder = path.join(__dirname, "../tmp");
-
-    return folder;
+    return "/tmp/repo-analyzer";
 }
 
 /**
