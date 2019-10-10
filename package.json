@@ -1,9 +1,10 @@
 {
   "name": "@feedzai/analyzer-utilities",
-  "version": "1.0.27",
+  "version": "1.0.28",
   "description": "Utilities for the repo-analyzer project",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint ./*.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,5 +23,14 @@
     "pino": "^5.13.2",
     "strip-json-comments": "^3.0.1",
     "yargs": "^14.0.0"
+  },
+  "devDependencies": {
+    "@feedzai/eslint-config-feedzai": "^4.0.1",
+    "@feedzai/eslint-config-feedzai-react": "^4.0.1",
+    "eslint": "^6.5.1",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jest": "^21.27.2",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-react": "^7.12.3"
   }
 }

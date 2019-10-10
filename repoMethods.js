@@ -1,13 +1,19 @@
 const util = require("util");
 const fs = require("fs");
-const _ = require("lodash");
 const exec = util.promisify(require("child_process").exec);
+const _ = require("lodash");
 const logger = require("pino")({
     prettyPrint: { colorize: true },
     translateTime: false
 });
 const hasYarn = require("has-yarn");
-const { fileExists, getRepoFolder, executeCommand, executeCommandSync, executeCommandGetOutput } = require("./utilities");
+const {
+    fileExists,
+    getRepoFolder,
+    executeCommand,
+    executeCommandSync,
+    executeCommandGetOutput
+} = require("./utilities");
 
 /**
  * repoMethods
@@ -80,11 +86,11 @@ async function installRepo(repo) {
 }
 
 /**
- * Install the given `repo` 
+ * Install the given `repo`
  * @param  {object} repo
+ * @param {string} folder name
  */
 async function installRepoSync(repo, folder) {
-
     let result;
 
     if (hasYarn(folder)) {
@@ -103,12 +109,13 @@ async function installRepoSync(repo, folder) {
 
 /**
  * Returns the repository name
+ * @param {string} location
  * @returns {string}
  */
 function getRepoName(location) {
-    return executeCommandGetOutput(location, "git config --get remote.origin.url").then(name => {
+    return executeCommandGetOutput(location, "git config --get remote.origin.url").then((name) => {
         return _.upperFirst(_.last(name.split("/")).replace(".git", "")).replace("\n", "");
-    })
+    });
 }
 
 module.exports = {

@@ -1,14 +1,13 @@
 const path = require("path");
 const fs = require("fs");
 const util = require("util");
+const execSync = require("child_process").execSync;
 const logger = require("pino")({
     prettyPrint: { colorize: true },
     translateTime: false
 });
 const _ = require("lodash");
 const readFile = util.promisify(fs.readFile);
-const execSync = require("child_process").execSync;
-
 
 
 /**
@@ -27,11 +26,10 @@ let lastReport;
 
 /**
  * Used to load the metrics from the config
- * @param  {Array} metrics
+ * @param  {Array} configMetrics
  * @returns {boolean}
  */
 function loadMetrics(configMetrics) {
-
     if (_.isArray(configMetrics)) {
         metrics = configMetrics;
         return true;
@@ -116,8 +114,8 @@ function executeCommandSync(folder, command) {
     try {
         return execSync(`cd ${folder} && ${command}`);
     } catch (err) {
-        console.log(err);
         logger.error(`Error executing ${command} on ${folder}`);
+        return null;
     }
 }
 
@@ -127,7 +125,8 @@ function executeCommandSync(folder, command) {
  * @returns {string}
  */
 function getLastCommit(repoFolder) {
-    let result = executeCommandSync(repoFolder, "git rev-parse HEAD").toString();
+    const result = executeCommandSync(repoFolder, "git rev-parse HEAD").toString();
+
     result.replace("\n", "");
     return result;
 }
@@ -147,12 +146,12 @@ async function runMetrics(repo, repoFolder, packageJson) {
             metricNames.push(current.info().name);
             metricGroups.push(current.info());
         }
-        let hash = getLastCommit(repoFolder);
+        const hash = getLastCommit(repoFolder);
 
         const lastResult = lastReportMetric(repo, current.info().name);
 
         if (_.isObject(lastResult) && (hash === lastResult.hashLastCommit)) {
-            logger.info(`'${current.info().name}' for '${repo.label}' used from last report.`)
+            logger.info(`'${current.info().name}' for '${repo.label}' used from last report.`);
             return lastResult;
         }
         return current.verify().then((verify) => {
@@ -187,10 +186,10 @@ async function runMetrics(repo, repoFolder, packageJson) {
 /**
  * Calculates all metrics for a give `repo`
  * @param  {object} repo
+ * @param {string} repoFolder
  * @returns {object}
  */
 async function getMetricsForRepo(repo, repoFolder) {
-
     let packageJson;
 
     try {
@@ -206,7 +205,7 @@ async function getMetricsForRepo(repo, repoFolder) {
             return {
                 repository: repo.label,
                 metrics: res,
-                installedGitHash: repo.installedGitHash,
+                installedGitHash: repo.installedGitHash
             };
         });
     }
