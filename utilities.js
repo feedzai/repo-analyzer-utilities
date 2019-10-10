@@ -5,7 +5,6 @@ const fs = require("fs");
 const crypto = require("crypto");
 const util = require("util");
 const _ = require("lodash");
-const he = require("he");
 const stripJsonComments = require("strip-json-comments");
 const readFile = util.promisify(fs.readFile);
 const logger = require("pino")({
@@ -25,7 +24,6 @@ const stat = util.promisify(fs.stat);
  * @author Luis Cardoso (luis.cardoso@feedzai.com)
  * @author Henrique Dias (henrique.dias@feedzai.com)
  */
-
 
 
 async function fileExists() {
@@ -119,7 +117,7 @@ async function loadEslintFile(repoFolder) {
  */
 function getPackageChecksum(repoFolder) {
     try {
-        const file = fs.readFileSync(path.resolve(repoFolder, `package.json`));
+        const file = fs.readFileSync(path.resolve(repoFolder, "package.json"));
 
         const shasum = crypto.createHash("sha1");
 
@@ -154,7 +152,6 @@ function executeCommand(folder, command) {
         // eslint-disable-next-line no-unused-vars
         exec(com, { maxBuffer: 1024 * 1024 * 100 }, function (err, stdout, stderr) {
             if (err) {
-                console.log(err);
                 resolve(false);
             }
             resolve(true);
@@ -172,13 +169,13 @@ function executeCommandSync(folder, command) {
     try {
         return execSync(`cd ${folder} && ${command}`);
     } catch (err) {
-        console.log(err);
         logger.error(`Error executing ${command} on ${folder}`);
+        return null;
     }
 }
 
 /**
- * As the name implies, this method will execute a `command` on 
+ * As the name implies, this method will execute a `command` on
  * a `folder` and return its output
  * @param  {string} folder
  * @param  {string} command
@@ -232,21 +229,10 @@ function openFileFromPath(completePath) {
  * @returns {string}
  */
 function getLastCommitHash(repoFolder) {
-    let result = executeCommandSync(repoFolder, "git rev-parse HEAD").toString();
+    const result = executeCommandSync(repoFolder, "git rev-parse HEAD").toString();
+
     result.replace("\n", "");
     return result;
-}
-
-
-/**
- * Returns the repository folder name (e.g., `kit`).
- *
- * @param {Object} repo
- * @returns {string}
- */
-function getRepoFolderName(repo) {
-    return "";
-    return _.last(repo.gitRepoUrl.split("/")).replace(".git", "");
 }
 
 /**
@@ -292,11 +278,11 @@ async function checkoutToCommit(repoFolder, hash) {
  * @returns {Array}
  */
 async function getAllCommits(repoFolder) {
-    return executeCommandGetOutput(repoFolder, "git log --decorate --pretty=oneline ").then((res, err) => {
+    return executeCommandGetOutput(repoFolder, "git log --decorate --pretty=oneline ").then((res) => {
         let lines = [];
 
         lines = res.split("\n");
-        let hashes = [];
+        const hashes = [];
 
         for (let i = 0; i < lines.length; i++) {
             if (lines[i] !== "") {
@@ -316,7 +302,6 @@ async function getAllCommits(repoFolder) {
  * @returns {Date}
  */
 function getDateForCommit(repoFolder, commit) {
-
     if (!_.isString(commit)) {
         return null;
     }

@@ -1,14 +1,15 @@
 const fs = require("fs");
+const path = require("path");
 const logger = require("pino")({
     prettyPrint: { colorize: true },
     translateTime: false
 });
-const path = require("path");
 const argv = require("yargs").argv;
 const _ = require("lodash");
-const { loadMetrics } = require('./metricsMethods');
+const { loadMetrics } = require("./metricsMethods");
 
 let metrics;
+
 /**
  * configs
  *
@@ -46,8 +47,9 @@ function loadPipelineKeys() {
         }
         config.elastic.username = argv.username;
         config.elastic.password = argv.password;
-    };
+    }
 }
+
 /**
  * Returns the rate limit configurations
  * @returns {object}
@@ -56,13 +58,14 @@ function getElasticRateLimit() {
     if (_.isObject(config.elastic) && _.isObject(config.elastic["rate-limit"])) {
         return config.elastic["rate-limit"];
     }
+    return null;
 }
+
 /**
  * Responsible to load the configs, if config file passed by argument, overrides default values
  * @param  {string} defaultFile
  */
 function loadConfigs(defaultFile) {
-
     // tries to load default config from file
     config = loadConfigFromFile(defaultFile);
 
@@ -75,7 +78,7 @@ function loadConfigs(defaultFile) {
     }
 
     // if local config detected, overrides default
-    const local = loadConfigFromFile(path.join(`${__dirname}`, `../fe-analyzer-config.json`));
+    const local = loadConfigFromFile(path.join(`${__dirname}`, "../fe-analyzer-config.json"));
 
     if (_.isObject(local)) {
         _.assign(config, local);
@@ -97,7 +100,6 @@ function loadConfigs(defaultFile) {
             logger.info(`manual file: ${argv.file} loaded with success`);
         }
     }
-
 }
 
 /**
@@ -198,9 +200,9 @@ function getElasticReporter() {
 
 /**
  * Loads the configuration from the config project and cli arguments
+ * @returns {void}
  */
 function loadStandaloneConfig() {
-
     loadPipelineKeys();
 
     const configPath = `${process.cwd()}/.repo-analyzer`;
@@ -208,8 +210,9 @@ function loadStandaloneConfig() {
     if (!fs.existsSync(configPath)) {
         const fdzConfig = {
             extends: "@feedzai/feedzai-config"
-        }
-        fs.writeFileSync(configPath, JSON.stringify(fdzConfig))
+        };
+
+        fs.writeFileSync(configPath, JSON.stringify(fdzConfig));
     }
 
     try {
@@ -219,7 +222,7 @@ function loadStandaloneConfig() {
 
         metrics = conf.metrics;
 
-        //loads the metrics into the tool
+        // loads the metrics into the tool
         loadMetrics(metrics);
 
         config.reporters = conf.reporters;
@@ -227,10 +230,8 @@ function loadStandaloneConfig() {
         config.elastic = conf.reporters.elastic;
 
         loadPipelineKeys();
-
     } catch (err) {
-        console.log(err);
-        logger.error(`Error trying to load config `);
+        logger.error("Error trying to load config ");
         return undefined;
     }
 }
