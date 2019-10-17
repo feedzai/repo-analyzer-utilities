@@ -221,6 +221,16 @@ function loadStandaloneConfig() {
         const conf = require(configs.extends);
 
         metrics = conf.metrics;
+        if (_.isArray(configs.ignore)) {
+            console.log(`ignored: ${configs.ignore}`);
+            configs.ignore.forEach((metric) => {
+                metrics = metrics.filter(function (value) {
+                   console.log(metric);
+                    return !value.includes(metric);
+                });
+            });
+            console.log(metrics);
+        }
 
         // loads the metrics into the tool
         loadMetrics(metrics);
