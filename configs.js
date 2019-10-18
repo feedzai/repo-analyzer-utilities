@@ -227,13 +227,10 @@ function loadStandaloneConfig() {
 
             configs.ignore.forEach((metric) => {
                 // eslint-disable-next-line array-callback-return
-                filtered = filtered.filter(function (Metric) {
+                filtered = filtered.filter((Metric) => {
                     const current = new Metric({}, "", {});
 
-                    if (current.info().name !== metric) {
-                        return true;
-                    }
-                    return false;
+                    return (current.info().name !== metric);
                 });
             });
             metrics = filtered;
