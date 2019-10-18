@@ -1,6 +1,6 @@
 {
   "name": "@feedzai/analyzer-utilities",
-  "version": "1.0.30",
+  "version": "1.0.47",
   "description": "Utilities for the repo-analyzer project",
   "main": "index.js",
   "scripts": {

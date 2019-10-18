@@ -221,15 +221,22 @@ function loadStandaloneConfig() {
         const conf = require(configs.extends);
 
         metrics = conf.metrics;
+
         if (_.isArray(configs.ignore)) {
-            console.log(`ignored: ${configs.ignore}`);
+            let filtered = metrics;
+
             configs.ignore.forEach((metric) => {
-                metrics = metrics.filter(function (value) {
-                   console.log(metric);
-                    return !value.includes(metric);
+                // eslint-disable-next-line array-callback-return
+                filtered = filtered.filter(function (Metric) {
+                    const current = new Metric({}, "", {});
+
+                    if (current.info().name !== metric) {
+                        return true;
+                    }
+                    return false;
                 });
             });
-            console.log(metrics);
+            metrics = filtered;
         }
 
         // loads the metrics into the tool
@@ -241,6 +248,7 @@ function loadStandaloneConfig() {
 
         loadPipelineKeys();
     } catch (err) {
+        logger.log(err);
         logger.error("Error trying to load config ");
         return undefined;
     }
