@@ -222,6 +222,17 @@ function loadStandaloneConfig() {
 
         metrics = conf.metrics;
 
+        if (_.isArray(configs.ignore)) {
+            let filtered = metrics;
+
+            filtered = filtered.filter((Metric) => {
+                const current = new Metric({}, "", {});
+
+                return !configs.ignore.includes(current.info().name);
+            });
+            metrics = filtered;
+        }
+
         // loads the metrics into the tool
         loadMetrics(metrics);
 
@@ -231,6 +242,7 @@ function loadStandaloneConfig() {
 
         loadPipelineKeys();
     } catch (err) {
+        logger.log(err);
         logger.error("Error trying to load config ");
         return undefined;
     }
