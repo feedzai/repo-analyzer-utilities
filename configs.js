@@ -225,13 +225,10 @@ function loadStandaloneConfig() {
         if (_.isArray(configs.ignore)) {
             let filtered = metrics;
 
-            configs.ignore.forEach((metric) => {
-                // eslint-disable-next-line array-callback-return
-                filtered = filtered.filter((Metric) => {
-                    const current = new Metric({}, "", {});
+            filtered = filtered.filter((Metric) => {
+                const current = new Metric({}, "", {});
 
-                    return (current.info().name !== metric);
-                });
+                return !configs.ignore.includes(current.info().name);
             });
             metrics = filtered;
         }
